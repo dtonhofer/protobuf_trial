@@ -1,0 +1,162 @@
+// https://protobuf.dev/programming-guides/proto3/
+// https://protobuf.dev/getting-started/javatutorial/
+// https://protobuf.dev/getting-started/javatutorial/#protocol-format
+
+syntax = "proto3";
+
+// The protobuf package is called "tutorial":
+package tutorial;
+
+// Not everything as inner classes inside a monster large class, please:
+option java_multiple_files = true;
+
+// Have a dedicated Java package for the generated classes:
+option java_package = "name.heavycarbon.protobuf_trial.protos";
+
+// The class name of the wrapper class which will represent this file
+option java_outer_classname = "PacketProtos";
+
+// ---
+// An UUID is just a typical 128 bit (16 byte) integer
+// https://en.wikipedia.org/wiki/Universally_unique_identifier
+// Here is a Protobuf representation of UUID as an array of byte (16 byte, always).
+// Serialization / Deserialization to Java UUID is a bit of a hassle.
+// ---
+
+message Uuid {
+  bytes data = 1;
+}
+
+// ---
+// Here is a Protobuf representation of UUID as two long (2 x 64 bit)
+// This is easy to handle in Java.
+// ---
+
+message UuidSimple {
+  uint64 low = 1;
+  uint64 high = 2;
+}
+
+// ---
+// Client->Server messages ("payloads") used during "Login exchange"
+// ---
+
+message LoginChallengeSolved {
+  uint64 a = 1;
+  uint64 b = 2;
+}
+
+message LoginFollowup {
+  string username = 1;
+}
+
+// ---
+// Server->Client sub-messages ("payloads") carrying more information
+// about a generic faîlure outside of the "Login exchange"
+// ---
+
+message GenericFailure {
+  string msg = 1;
+  ClientToServer cause = 2;
+}
+
+// ---
+// Server->Client sub-messages ("payloads") carrying more information
+// used during "Login exchange".
+// ---
+
+message LoginGenericFailure {
+  string msg = 1;
+  ClientToServer cause = 2;
+}
+
+message LoginChallenge {
+  uint64 product = 1;
+}
+
+message LoginRequestAnswerFailure {
+  string msg = 1;
+}
+
+message LoginFollowupAnswerOk {
+  UuidSimple player_uuid = 1;
+  string player_name = 2;
+}
+
+// ---
+// Common sub-message in both "Server->Client" & "Client->Server" messages.
+// The "nil" (all-0) UUID is the default for UUIDs and is not valid.
+// 0 is the default for seq_num and is not valid.
+// ---
+
+message CommonStuff {
+
+  UuidSimple server_exchange_uuid = 1;
+  UuidSimple client_exchange_uuid = 2;
+  uint32 seq_num = 3;
+
+}
+
+// ---
+// A "Server->Client" message.
+// It wraps a single possible "Server->Client" sub-message identified
+// by "payload_type". However, we need to list all possibilities as
+// sub-messages (as there is no "union")
+// ---
+
+message ServerToClient {
+
+  enum PayloadType {
+    UNKNOWN = 0; // first enum value must be 0 and will be used as "default"
+    GENERIC_FAILURE = 1;
+    LOGIN_GENERIC_FAILURE = 10;
+    LOGIN_CHALLENGE = 20;
+    LOGIN_REQUEST_ANSWER_OK = 30;
+    LOGIN_REQUEST_ANSWER_FAILURE = 40;
+    LOGIN_FOLLOWUP_ANSWER_OK = 50;
+    LOGIN_FOLLOWUP_ANSWER_FAILURE = 60;
+    LOGIN_CHALLENGE_SOLVED_ANSWER_OK = 70;
+    LOGIN_CHALLENGE_SOLVED_ANSWER_FAILURE = 80;
+  };
+
+  PayloadType payload_type = 1; // 0 is default and is not valid
+  CommonStuff common_stuff = 2;
+
+  // Possible payloads, only the ones actually set appear on the wire.
+  // But they all exist after deserialization.
+
+  GenericFailure generic_failure = 101;
+  LoginGenericFailure login_generic_failure = 102;
+  LoginChallenge login_challenge = 103;
+  LoginRequestAnswerFailure login_request_answer_failure = 104;
+  LoginFollowupAnswerOk login_followup_answer_ok = 105;
+
+}
+
+// ---
+// A "Client->Server" message.
+// It wraps a single possible "Client->Server" sub-message identified
+// by "payload_type". However, we need to list all possibilities as
+// sub-messages (as there is no "union")
+// ---
+
+message ClientToServer {
+
+  enum PayloadType {
+    UNKNOWN = 0; // first enum value must be 0 and will be used as "default"
+    LOGIN_CHALLENGE_SOLVED = 10;
+    LOGIN_FOLLOWUP = 20;
+    LOGIN_REQUEST = 30;
+    LOGIN_FINISH = 40;
+  };
+
+  PayloadType payload_type = 1; // 0 is default and is not valid
+  CommonStuff common_stuff = 2;
+
+  // Possible payloads, only the ones actually set appear on the wire.
+  // But they all exist after deserialization.
+
+  LoginChallengeSolved login_challenge_solved = 101;
+  LoginFollowup login_followup = 102;
+
+}

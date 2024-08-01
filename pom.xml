@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>name.heavycarbon</groupId>
+    <artifactId>protobuf_trial</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+
+        <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
+        <!-- Imports are:
+        import org.jetbrains.annotations.NotNull;
+        import org.jetbrains.annotations.Nullable;
+        -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Pulling in Lombok library -->
+        <!-- Intellij IDEA has a specific plugin for doing the annotation processing for Lombok, it's already included by default -->
+        <!-- However, one still has to switch on "annotation processing". Intellij IDEA will ask to do so if it's not. -->
+        <!-- Otherwise: Settings > Compiler > Annotation Processor -->
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- GitHub: https://github.com/protocolbuffers/protobuf -->
+        <!-- Docu: https://protobuf.dev/ -->
+        <!-- Getting started: https://protobuf.dev/getting-started/ -->
+        <!-- IDEA: https://blog.jetbrains.com/idea/2023/05/how-to-work-with-protobuf-maven-projects-in-intellij-idea/ -->
+        <!-- This needs the corresponding Maven plugin -->
+        <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>4.27.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java-util -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+            <version>4.27.2</version>
+        </dependency>
+
+        <!-- ~~~~~~~ -->
+        <!-- TESTING -->
+        <!-- ~~~~~~~ -->
+
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+        <!-- Pulls in: org.opentest4j:opentest4j -->
+        <!-- Pulls in: org.junit.platform:junit-platform-commons -->
+        <!-- Pulls in: org.apiguardian:apiguardian-api -->
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.3</version>
+            <scope>test</scope> <!-- FOR TESTS -->
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.truth/truth -->
+        <!-- "Fluent assertions for Java and Android" -->
+        <!-- Docu: https://truth.dev/ -->
+        <!-- import static com.google.common.truth.Truth.assertThat; -->
+        <!-- import static com.google.common.truth.Truth.assertWithMessage; -->
+        <dependency>
+            <groupId>com.google.truth</groupId>
+            <artifactId>truth</artifactId>
+            <version>1.4.4</version>
+            <scope>test</scope> <!-- FOR TESTS -->
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <!-- GitHub site for packaged protoc compiler: https://github.com/os72/protoc-jar -->
+                <!-- GitHub site for plugin: https://github.com/os72/protoc-jar-maven-plugin -->
+                <!-- Repo: https://mvnrepository.com/artifact/com.github.os72/protoc-jar-maven-plugin -->
+                <!-- Docu: http://os72.github.io/protoc-jar-maven-plugin/ -->
+                <!-- Options: http://os72.github.io/protoc-jar-maven-plugin/run-mojo.html -->
+                <groupId>com.github.os72</groupId>
+                <artifactId>protoc-jar-maven-plugin</artifactId>
+                <version>3.11.4</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <!-- http://os72.github.io/protoc-jar-maven-plugin/run-mojo.html -->
+                            <optimizeCodegen>false</optimizeCodegen>
+                            <protocVersion>3.25.3</protocVersion>
+                            <includeStdTypes>true</includeStdTypes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <!-- Repo: https://mvnrepository.com/artifact/org.codehaus.mojo/build-helper-maven-plugin -->
+                <!-- Docu: https://www.mojohaus.org/build-helper-maven-plugin/ -->
+                <!-- Usage: https://www.mojohaus.org/build-helper-maven-plugin/usage.html -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.basedir}/target/generated-sources</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
