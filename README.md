@@ -8,7 +8,8 @@ perform all of the serialization/deserialization (to a compact binary representa
 Actually going to the network is not done in this project. This is all about testing the serialization and unserialization 
 of packets. And actually getting everything to work in Intellij IDEA.
 
-This is a standard Maven project, take a look at the [POM](pom.xml)
+- This is a standard Maven project, take a look at the [POM](pom.xml)
+- There is a single `.proto` definition file (for now) from which protobuf source is generated: [packets.proto](src/main/protobuf/packets.proto)
 
 Relevant links to documentation:
 
