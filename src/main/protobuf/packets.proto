@@ -14,7 +14,7 @@ option java_multiple_files = true;
 option java_package = "name.heavycarbon.protobuf_trial.protos";
 
 // The class name of the wrapper class which will represent this file
-option java_outer_classname = "PacketProtos";
+option java_outer_classname = "PacketsProto";
 
 // ---
 // An UUID is just a typical 128 bit (16 byte) integer

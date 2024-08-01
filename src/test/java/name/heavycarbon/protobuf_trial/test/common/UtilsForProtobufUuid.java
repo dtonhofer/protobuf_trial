@@ -1,4 +1,4 @@
-package common;
+package name.heavycarbon.protobuf_trial.test.common;
 
 import com.google.protobuf.ByteString;
 import name.heavycarbon.protobuf_trial.protos.Uuid;

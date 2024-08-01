@@ -1,7 +1,7 @@
-package protos;
+package name.heavycarbon.protobuf_trial.test.testing;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import common.UtilsForProtobufUuid;
+import name.heavycarbon.protobuf_trial.test.common.UtilsForProtobufUuid;
 import name.heavycarbon.protobuf_trial.protos.Uuid;
 import org.junit.jupiter.api.Test;
 
@@ -69,7 +69,7 @@ class TestProtobufUuid {
     }
 
     @Test
-    void testProtobufUuidDefault() throws InvalidProtocolBufferException {
+    void testProtobufUuidDefault() {
         final Uuid pbUuid = Uuid.newBuilder().getDefaultInstanceForType();
         final byte[] pbBytes = pbUuid.toByteArray();
         System.out.println("Default protobuf UUID serialized via protobuf: " + UtilsForProtobufUuid.bytesToString(pbBytes));

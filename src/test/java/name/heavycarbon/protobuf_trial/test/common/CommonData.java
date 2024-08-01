@@ -1,13 +1,12 @@
-package common;
+package name.heavycarbon.protobuf_trial.test.common;
 
 import lombok.Getter;
 import name.heavycarbon.protobuf_trial.protos.CommonStuff;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Random;
 import java.util.UUID;
-
-import static common.UtilsForProtobufUuid.isNilUuid;
 
 // ---
 // A simple "record" class carrying a packet's sequence number and UUIDs,
@@ -25,10 +24,10 @@ public class CommonData {
         if (seqNum <= 0) {
             throw new IllegalArgumentException("seqNum must be greater than 0 but is " + seqNum);
         }
-        if (clientExchangeUUID != null && isNilUuid(clientExchangeUUID)) {
+        if (clientExchangeUUID != null && UtilsForProtobufUuid.isNilUuid(clientExchangeUUID)) {
             throw new IllegalArgumentException("clientExchangeUUID must be non-nil");
         }
-        if (serverExchangeUUID != null && isNilUuid(serverExchangeUUID)) {
+        if (serverExchangeUUID != null && UtilsForProtobufUuid.isNilUuid(serverExchangeUUID)) {
             throw new IllegalArgumentException("serverExchangeUUID must be non-nil");
         }
         this.clientExchangeUUID = clientExchangeUUID;
@@ -50,5 +49,19 @@ public class CommonData {
             builder.setServerExchangeUuid(pbUuid);
         }
         return builder.build();
+    }
+
+    // ---
+    // Generate random "CommonData" instance, with random UUIDs and
+    // a random seqNum from [1,999].
+    // ---
+
+    private final static Random rand = new Random();
+
+    public static CommonData generateRandomCommonData() {
+        final UUID clientExchangeUUID = UUID.randomUUID();
+        final UUID serverExchangeUUID = UUID.randomUUID();
+        final int seqNum = rand.nextInt(1,1000); // must be > 0
+        return new CommonData(seqNum, clientExchangeUUID, serverExchangeUUID);
     }
 }

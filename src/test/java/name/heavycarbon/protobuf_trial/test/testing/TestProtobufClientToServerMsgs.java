@@ -1,14 +1,13 @@
-package protos;
+package name.heavycarbon.protobuf_trial.test.testing;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import common.CommonData;
-import common.UtilsForProtobufUuid;
 import name.heavycarbon.protobuf_trial.protos.ClientToServer;
+import name.heavycarbon.protobuf_trial.test.common.CommonData;
+import name.heavycarbon.protobuf_trial.test.common.UtilsForProtobufUuid;
 import org.junit.jupiter.api.Test;
 
 import static com.google.common.truth.Truth.assertThat;
-import static common.UtilsForProtobufClientToServerMsgs.*;
-import static protos.Common.generateCommonData;
+import static name.heavycarbon.protobuf_trial.test.common.UtilsForProtobufClientToServerMsgs.*;
 
 class TestProtobufClientToServerMsgs {
 
@@ -18,7 +17,7 @@ class TestProtobufClientToServerMsgs {
 
     @Test
     void testLoginFinish() throws InvalidProtocolBufferException {
-        final ClientToServer c2s = buildLoginFinish(generateCommonData());
+        final ClientToServer c2s = buildLoginFinish(CommonData.generateRandomCommonData());
         assertThat(c2s.getPayloadType()).isEqualTo(ClientToServer.PayloadType.LOGIN_FINISH);
         final ClientToServer c2sBack;
         {
@@ -32,7 +31,7 @@ class TestProtobufClientToServerMsgs {
 
     @Test
     void testLoginRequest() throws InvalidProtocolBufferException {
-        final ClientToServer c2s = buildLoginRequest(generateCommonData());
+        final ClientToServer c2s = buildLoginRequest(CommonData.generateRandomCommonData());
         assertThat(c2s.getPayloadType()).isEqualTo(ClientToServer.PayloadType.LOGIN_REQUEST);
         final ClientToServer c2sBack;
         {
@@ -47,7 +46,7 @@ class TestProtobufClientToServerMsgs {
 
     @Test
     void testLoginFollowup() throws InvalidProtocolBufferException {
-        final ClientToServer c2s = buildLoginFollowup("john doe", generateCommonData());
+        final ClientToServer c2s = buildLoginFollowup("john doe", CommonData.generateRandomCommonData());
         assertThat(c2s.getPayloadType()).isEqualTo(ClientToServer.PayloadType.LOGIN_FOLLOWUP);
         final ClientToServer c2sBack;
         {
@@ -63,7 +62,7 @@ class TestProtobufClientToServerMsgs {
     void testLoginChallengeSolved() throws InvalidProtocolBufferException {
         final long a = 11;
         final long b = 23;
-        final ClientToServer c2s = buildLoginChallengeSolved(a, b, generateCommonData());
+        final ClientToServer c2s = buildLoginChallengeSolved(a, b, CommonData.generateRandomCommonData());
         assertThat(c2s.getPayloadType()).isEqualTo(ClientToServer.PayloadType.LOGIN_CHALLENGE_SOLVED);
         final ClientToServer c2sBack;
         {
@@ -76,15 +75,15 @@ class TestProtobufClientToServerMsgs {
     }
 
     @Test
-    void testMessagesAreDifferent() throws InvalidProtocolBufferException {
-        final ClientToServer c2s1 = buildLoginRequest(generateCommonData());
-        final ClientToServer c2s2 = buildLoginRequest(generateCommonData());
+    void testMessagesAreDifferent() {
+        final ClientToServer c2s1 = buildLoginRequest(CommonData.generateRandomCommonData());
+        final ClientToServer c2s2 = buildLoginRequest(CommonData.generateRandomCommonData());
         assertThat(c2s1).isNotEqualTo(c2s2);
     }
 
     @Test
-    void testMessagesAreEqual() throws InvalidProtocolBufferException {
-        CommonData cd = generateCommonData();
+    void testMessagesAreEqual() {
+        CommonData cd = CommonData.generateRandomCommonData();
         final ClientToServer c2s1 = buildLoginRequest(cd);
         final ClientToServer c2s2 = buildLoginRequest(cd);
         assertThat(c2s1).isEqualTo(c2s2);
