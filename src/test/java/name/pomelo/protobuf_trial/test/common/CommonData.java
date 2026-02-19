@@ -1,7 +1,7 @@
-package name.heavycarbon.protobuf_trial.test.common;
+package name.pomelo.protobuf_trial.test.common;
 
 import lombok.Getter;
-import name.heavycarbon.protobuf_trial.protos.CommonStuff;
+import name.pomelo.protobuf_trial.protos.CommonStuff;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

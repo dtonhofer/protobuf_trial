@@ -1,9 +1,9 @@
-package name.heavycarbon.protobuf_trial.test.common;
+package name.pomelo.protobuf_trial.test.common;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageOrBuilder;
 import com.google.protobuf.util.JsonFormat;
-import name.heavycarbon.protobuf_trial.protos.*;
+import name.pomelo.protobuf_trial.protos.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
@@ -60,7 +60,7 @@ public class UtilsForProtobufClientToServerMsgs {
             case LOGIN_REQUEST:
                 // there is no payload/sub-msg
                 break;
-            case LOGIN_FINISH:
+            case LOGIN_CLOSE:
                 // there is no payload/sub-msg
                 break;
             default:
@@ -105,7 +105,7 @@ public class UtilsForProtobufClientToServerMsgs {
     public static @NotNull ClientToServer buildLoginFinish(@NotNull CommonData commonData) {
         final ClientToServer.Builder builder = buildCclientToServerBuilder(commonData);
         return builder
-                .setPayloadType(ClientToServer.PayloadType.LOGIN_FINISH)
+                .setPayloadType(ClientToServer.PayloadType.LOGIN_CLOSE)
                 .build();
     }
 

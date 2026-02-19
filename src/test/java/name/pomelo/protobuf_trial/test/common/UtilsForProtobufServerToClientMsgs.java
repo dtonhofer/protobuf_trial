@@ -1,7 +1,7 @@
-package name.heavycarbon.protobuf_trial.test.common;
+package name.pomelo.protobuf_trial.test.common;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import name.heavycarbon.protobuf_trial.protos.*;
+import name.pomelo.protobuf_trial.protos.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;

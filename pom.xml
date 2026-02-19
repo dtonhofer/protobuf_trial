@@ -4,14 +4,25 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>name.heavycarbon</groupId>
+    <!-- reverse DNS form of the package name -->
+    <groupId>name.pomelo</groupId>
     <artifactId>protobuf_trial</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <!-- SNAPSHOT: “this is a development version, not a final release yet.” -->
+    <!-- A snapshot can be rebuilt and republished, and the “same” version may point to newer code later. -->
+    <version>1.1-SNAPSHOT</version>
 
     <properties>
+        <!-- We will compile for Java 21 (LTS) -->
+        <!-- https://en.wikipedia.org/wiki/Java_version_history -->
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- This is the version number of the "google protocol buffers library for Java" in the Maven repository -->
+        <!-- ...There are also two "protobuf language editions": version 2 and version 3 -->
+        <!-- ...https://protobuf.dev/programming-guides/editions/ -->
+        <!-- ...Protocol buffers themselves have version numbers, currently around 30.x -->
+        <!-- ...https://protobuf.dev/news/ -->
+        <java.protobuf.version>4.33.5</java.protobuf.version>
     </properties>
 
     <dependencies>
@@ -28,7 +39,7 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- Pulling in Lombok library -->
+        <!-- Pulling in "Lombok" library -->
         <!-- Intellij IDEA has a specific plugin for doing the annotation processing for Lombok, it's already included by default -->
         <!-- However, one still has to switch on "annotation processing". Intellij IDEA will ask to do so if it's not. -->
         <!-- Otherwise: Settings > Compiler > Annotation Processor -->
@@ -36,27 +47,50 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.34</version>
+            <version>1.18.42</version>
             <scope>provided</scope>
         </dependency>
 
+        <!-- Core Protocol Buffers library. -->
+        <!-- Protocol Buffers are a way of encoding structured data in an efficient yet extensible format.  -->
         <!-- GitHub: https://github.com/protocolbuffers/protobuf -->
         <!-- Docu: https://protobuf.dev/ -->
         <!-- Getting started: https://protobuf.dev/getting-started/ -->
         <!-- IDEA: https://blog.jetbrains.com/idea/2023/05/how-to-work-with-protobuf-maven-projects-in-intellij-idea/ -->
-        <!-- This needs the corresponding Maven plugin -->
+        <!-- Compilation is started by a maven plugin -->
         <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>4.27.2</version>
+            <version>${java.protobuf.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java-util -->
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
-            <version>4.27.2</version>
+            <version>${java.protobuf.version}</version>
+        </dependency>
+
+        <!-- ~~~~~~~ -->
+        <!-- LOGGING -->
+        <!-- ~~~~~~~ -->
+
+        <!-- The logging API (SLF4J) and the logging implementation (LOGBACK) underneath -->
+        <!-- It turns out that we don't actually use them -->
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.17</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+        <!-- This will also pull in logback-core -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.32</version>
         </dependency>
 
         <!-- ~~~~~~~ -->
@@ -71,8 +105,9 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.10.3</version>
-            <scope>test</scope> <!-- FOR TESTS -->
+            <version>6.0.3</version>
+            <!-- FOR TESTS -->
+            <scope>test</scope>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.google.truth/truth -->
@@ -83,56 +118,82 @@
         <dependency>
             <groupId>com.google.truth</groupId>
             <artifactId>truth</artifactId>
-            <version>1.4.4</version>
-            <scope>test</scope> <!-- FOR TESTS -->
+            <version>1.4.5</version>
+            <!-- FOR TESTS -->
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
-                <!-- GitHub site for packaged protoc compiler: https://github.com/os72/protoc-jar -->
-                <!-- GitHub site for plugin: https://github.com/os72/protoc-jar-maven-plugin -->
-                <!-- Repo: https://mvnrepository.com/artifact/com.github.os72/protoc-jar-maven-plugin -->
-                <!-- Docu: http://os72.github.io/protoc-jar-maven-plugin/ -->
-                <!-- Options: http://os72.github.io/protoc-jar-maven-plugin/run-mojo.html -->
-                <groupId>com.github.os72</groupId>
-                <artifactId>protoc-jar-maven-plugin</artifactId>
-                <version>3.11.4</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <!-- http://os72.github.io/protoc-jar-maven-plugin/run-mojo.html -->
-                            <optimizeCodegen>false</optimizeCodegen>
-                            <protocVersion>3.25.3</protocVersion>
-                            <includeStdTypes>true</includeStdTypes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
+        <!-- To define the plugin version in your parent POM -->
+        <pluginManagement>
+            <plugins>
+                <!-- Repo: https://mvnrepository.com/artifact/io.github.ascopes/protobuf-maven-plugin -->
+                <!-- Homepage: https://github.com/ascopes/protobuf-maven-plugin -->
+                <!-- Github: https://github.com/ascopes/protobuf-maven-plugin -->
+                <!-- Docu: https://ascopes.github.io/protobuf-maven-plugin/ -->
+                <!-- Docu: https://ascopes.github.io/protobuf-maven-plugin/basic-usage.html -->
+                <plugin>
+                    <groupId>io.github.ascopes</groupId>
+                    <artifactId>protobuf-maven-plugin</artifactId>
+                    <!-- Version 5.0.0 is the latest as of 2026-02-29, see top of page https://ascopes.github.io/protobuf-maven-plugin/basic-usage.html -->
+                    <version>5.0.0</version>
+                    <configuration>
+                        <protoc>${java.protobuf.version}</protoc>
+                    </configuration>
+                </plugin>
+                <!-- “make Maven aware of extra stuff” -->
                 <!-- Repo: https://mvnrepository.com/artifact/org.codehaus.mojo/build-helper-maven-plugin -->
                 <!-- Docu: https://www.mojohaus.org/build-helper-maven-plugin/ -->
                 <!-- Usage: https://www.mojohaus.org/build-helper-maven-plugin/usage.html -->
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.6.0</version>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.6.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>io.github.ascopes</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>test</id>
+                        <!-- Bind protobuf generation explicitly to the Maven generate-sources phase. -->
+                        <!-- As recommended by AI to fix the problem of the Intellij IDE not finding the sources -->
+                        <id>protobuf-generate</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <!-- Ensure the generated code lands in a standard location -->
+                <!-- As recommended by AI to fix the problem of the Intellij IDE not finding the sources -->
+                <configuration>
+                    <outputDirectory>
+                        ${project.build.directory}/generated-sources/protobuf/java
+                    </outputDirectory>
+                </configuration>
+
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-protobuf-generated-sources</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>add-source</goal>
                         </goals>
                         <configuration>
+                            <!-- Ensure the generated code lands in a standard location -->
+                            <!-- As recommended by AI to fix the problem of the Intellij IDE not finding the sources -->
                             <sources>
-                                <source>${project.basedir}/target/generated-sources</source>
+                                <source>${project.build.directory}/generated-sources/protobuf/java</source>
                             </sources>
                         </configuration>
                     </execution>

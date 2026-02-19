@@ -1,13 +1,13 @@
-package name.heavycarbon.protobuf_trial.test.testing;
+package name.pomelo.protobuf_trial.test.testing;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import name.heavycarbon.protobuf_trial.protos.ClientToServer;
-import name.heavycarbon.protobuf_trial.test.common.CommonData;
-import name.heavycarbon.protobuf_trial.test.common.UtilsForProtobufUuid;
+import name.pomelo.protobuf_trial.protos.ClientToServer;
+import name.pomelo.protobuf_trial.test.common.CommonData;
+import name.pomelo.protobuf_trial.test.common.UtilsForProtobufUuid;
 import org.junit.jupiter.api.Test;
 
 import static com.google.common.truth.Truth.assertThat;
-import static name.heavycarbon.protobuf_trial.test.common.UtilsForProtobufClientToServerMsgs.*;
+import static name.pomelo.protobuf_trial.test.common.UtilsForProtobufClientToServerMsgs.*;
 
 class TestProtobufClientToServerMsgs {
 
@@ -18,7 +18,7 @@ class TestProtobufClientToServerMsgs {
     @Test
     void testLoginFinish() throws InvalidProtocolBufferException {
         final ClientToServer c2s = buildLoginFinish(CommonData.generateRandomCommonData());
-        assertThat(c2s.getPayloadType()).isEqualTo(ClientToServer.PayloadType.LOGIN_FINISH);
+        assertThat(c2s.getPayloadType()).isEqualTo(ClientToServer.PayloadType.LOGIN_CLOSE);
         final ClientToServer c2sBack;
         {
             final byte[] pbBytes = c2s.toByteArray();

@@ -1,19 +1,19 @@
-package name.heavycarbon.protobuf_trial.test.testing;
+package name.pomelo.protobuf_trial.test.testing;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import name.heavycarbon.protobuf_trial.protos.ClientToServer;
-import name.heavycarbon.protobuf_trial.protos.ServerToClient;
-import name.heavycarbon.protobuf_trial.test.common.CommonData;
-import name.heavycarbon.protobuf_trial.test.common.UtilsForProtobufUuid;
+import name.pomelo.protobuf_trial.protos.ClientToServer;
+import name.pomelo.protobuf_trial.protos.ServerToClient;
+import name.pomelo.protobuf_trial.test.common.CommonData;
+import name.pomelo.protobuf_trial.test.common.UtilsForProtobufUuid;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
 import static com.google.common.truth.Truth.assertThat;
-import static name.heavycarbon.protobuf_trial.test.common.UtilsForProtobufClientToServerMsgs.buildLoginFollowup;
-import static name.heavycarbon.protobuf_trial.test.common.UtilsForProtobufClientToServerMsgs.printAsJson;
-import static name.heavycarbon.protobuf_trial.test.common.UtilsForProtobufServerToClientMsgs.*;
+import static name.pomelo.protobuf_trial.test.common.UtilsForProtobufClientToServerMsgs.buildLoginFollowup;
+import static name.pomelo.protobuf_trial.test.common.UtilsForProtobufClientToServerMsgs.printAsJson;
+import static name.pomelo.protobuf_trial.test.common.UtilsForProtobufServerToClientMsgs.*;
 
 class TestProtobufServerToClientMsgs {
 

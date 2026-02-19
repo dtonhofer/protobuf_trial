@@ -1,8 +1,8 @@
-package name.heavycarbon.protobuf_trial.test.common;
+package name.pomelo.protobuf_trial.test.common;
 
 import com.google.protobuf.ByteString;
-import name.heavycarbon.protobuf_trial.protos.Uuid;
-import name.heavycarbon.protobuf_trial.protos.UuidSimple;
+import name.pomelo.protobuf_trial.protos.Uuid;
+import name.pomelo.protobuf_trial.protos.UuidSimple;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
@@ -48,6 +48,14 @@ public abstract class UtilsForProtobufUuid {
         return shift;
     }
 
+    private static void writeLongBigEndianly(final long value, @NotNull ByteArrayOutputStream baos) {
+        long shift = value;
+        for (int i = 0; i < 8; i++) {
+            baos.write((int) (shift & 0xFF));
+            shift >>= 8;
+        }
+    }
+
     public static @NotNull UuidSimple javaUuidToProtobufUuidSimple(@NotNull UUID javaUuid) {
         return UuidSimple.newBuilder()
                 .setHigh(javaUuid.getMostSignificantBits())
@@ -72,14 +80,6 @@ public abstract class UtilsForProtobufUuid {
         final long low = pbUuid.getLow();
         final long high = pbUuid.getHigh();
         return new UUID(high, low);
-    }
-
-    private static void writeLongBigEndianly(final long value, @NotNull ByteArrayOutputStream baos) {
-        long shift = value;
-        for (int i = 0; i < 8; i++) {
-            baos.write((int) (shift & 0xFF));
-            shift >>= 8;
-        }
     }
 
     // UUID: [F][E][D][C][B][A][9][8],[7][6][5][4][3][2][1][0]

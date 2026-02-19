@@ -11,7 +11,7 @@ package tutorial;
 option java_multiple_files = true;
 
 // Have a dedicated Java package for the generated classes:
-option java_package = "name.heavycarbon.protobuf_trial.protos";
+option java_package = "name.pomelo.protobuf_trial.protos";
 
 // The class name of the wrapper class which will represent this file
 option java_outer_classname = "PacketsProto";
@@ -101,7 +101,7 @@ message CommonStuff {
 // A "Server->Client" message.
 // It wraps a single possible "Server->Client" sub-message identified
 // by "payload_type". However, we need to list all possibilities as
-// sub-messages (as there is no "union")
+// sub-messages (as there is no "union type")
 // ---
 
 message ServerToClient {
@@ -137,24 +137,31 @@ message ServerToClient {
 // A "Client->Server" message.
 // It wraps a single possible "Client->Server" sub-message identified
 // by "payload_type". However, we need to list all possibilities as
-// sub-messages (as there is no "union")
+// sub-messages (as there is no "union type")
 // ---
 
 message ClientToServer {
 
   enum PayloadType {
     UNKNOWN = 0; // first enum value must be 0 and will be used as "default"
-    LOGIN_CHALLENGE_SOLVED = 10;
-    LOGIN_FOLLOWUP = 20;
-    LOGIN_REQUEST = 30;
-    LOGIN_FINISH = 40;
+    LOGIN_REQUEST = 10;
+    LOGIN_CHALLENGE_SOLVED = 20;
+    LOGIN_FOLLOWUP = 30;
+    LOGIN_CLOSE = 40;
   };
 
   PayloadType payload_type = 1; // 0 is default and is not valid
   CommonStuff common_stuff = 2;
 
-  // Possible payloads, only the ones actually set appear on the wire.
-  // But they all exist after deserialization.
+  // Possible "payload" sub-messages.
+  // Payloads are only actually carried for certain PayloadTypes:
+  // LOGIN_CHALLENGE_SOLVED and LOGIN_FOLLOWUP.
+  // We list the payload sub-messages as if they were always carried,
+  // as there is no "union type" or type hierarchy to avoid that.
+  // Payloads sub-messages left unfilled (at "default") will not
+  // appear when in the byte stream ("on the wire") when serialized-out.
+  // Payloads not found "on on the wire" when serializing-in will appear
+  // as defaults (in Java, instances with default values, not null).
 
   LoginChallengeSolved login_challenge_solved = 101;
   LoginFollowup login_followup = 102;
