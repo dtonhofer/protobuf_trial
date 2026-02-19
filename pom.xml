@@ -14,8 +14,10 @@
     <properties>
         <!-- We will compile for Java 21 (LTS) -->
         <!-- https://en.wikipedia.org/wiki/Java_version_history -->
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <!-- The following are know properties looked up by the maven compiler plugin: -->
+        <!-- maven.compiler.source, maven.compiler.target, maven.compiler.release. -->
+        <!-- Apparently maven.compiler.release is preferred nowadays. --> 
+        <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- This is the version number of the "google protocol buffers library for Java" in the Maven repository -->
         <!-- ...There are also two "protobuf language editions": version 2 and version 3 -->
