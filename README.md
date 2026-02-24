@@ -26,3 +26,9 @@ The file tree of the project looks as follows:
 
 ![File tree of project](docs/protobuf_trial.png)
 
+Finding a proper "POM" is somewhat black magic, but in the end it worked out. Pointed questions to AI 🦜 helped a lot!
+
+The depencies pulled in via Maven are as follows (this image can be obtained in IntelliJ IDEA under `View > Tool Windows > Maven`:
+
+![Dependency tree](docs/maven_dependency_tree.png)
+
