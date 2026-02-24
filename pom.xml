@@ -13,14 +13,16 @@
     <version>1.1-SNAPSHOT</version>
 
     <properties>
-        <!-- We will compile for Java 21 (LTS) -->
-        <!-- https://en.wikipedia.org/wiki/Java_version_history -->
-        <!-- The following are know properties looked up by the maven compiler plugin: -->
-        <!-- maven.compiler.source, maven.compiler.target, maven.compiler.release. -->
-        <!-- Apparently maven.compiler.release is preferred nowadays. --> 
-        <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- This is the version number of the "google protocol buffers library for Java" in the Maven repository -->
+
+        <!-- We will compile for Java 21 (LTS) -->
+        <!-- This is automatically picked up by the maven compiler plugin. -->
+        <!-- Prefer "maven.compiler.release" to "maven.compiler.source" and "maven.compiler.target". -->
+        <!-- https://en.wikipedia.org/wiki/Java_version_history -->
+        <maven.compiler.release>21</maven.compiler.release>
+
+        <!-- This is the version number of the "google protocol buffers library for Java" in the Maven -->
+        <!-- repository, used for dependencies and also by the Maven protobuf compiler plugin. -->
         <!-- ...There are also two "protobuf language editions": version 2 and version 3 -->
         <!-- ...https://protobuf.dev/programming-guides/editions/ -->
         <!-- ...Protocol buffers themselves have version numbers, currently around 30.x -->
@@ -30,27 +32,36 @@
 
     <dependencies>
 
-       <dependency>
+        <!-- To generate the dependency tree, use                               -->
+        <!-- "View | Tool Windows | Maven" in IntelliJ IDEA                     -->
+        <!-- or run "mvn dependency:tree" in the project directory.             -->
+        <!-- The topmost libraries appear also listed in the Intellij IDEA UI   -->
+        <!-- "Project Structure" > "Project Settings" > "Libraries"             -->
+
+        <dependency>
             <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
-            <!-- Imports are like this:
-            import org.jetbrains.annotations.NotNull;
-            import org.jetbrains.annotations.Nullable;
-            -->
+            <!-- Imports are like this: -->
+            <!-- import org.jetbrains.annotations.NotNull; -->
+            <!-- import org.jetbrains.annotations.Nullable; -->
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>24.1.0</version>
+            <!-- Compile time only -->
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <!-- Pulling in "Lombok" library -->
-            <!-- Intellij IDEA has a specific plugin for doing the annotation processing for Lombok, it's already included by default -->
-            <!-- However, one still has to switch on "annotation processing". Intellij IDEA will ask to do so if it's not. -->
+            <!-- The "Lombok" library which generates the Java get/set boilerplate. -->
+            <!-- Intellij IDEA has a specific plugin for doing the annotation processing for Lombok, -->
+            <!-- it's already included by default -->
+            <!-- However, one still has to switch on "annotation processing". -->
+            <!-- Intellij IDEA will ask to do so if it's not. -->
             <!-- Otherwise: Settings > Compiler > Annotation Processor -->
             <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.42</version>
+            <!-- "Provided by the environment at runtime" -->
             <scope>provided</scope>
         </dependency>
 
@@ -58,7 +69,7 @@
             <!-- Core "Protocol Buffers" library. -->
             <!-- Protocol Buffers are a way of encoding structured data in an efficient yet extensible format.  -->
             <!-- GitHub: https://github.com/protocolbuffers/protobuf -->
-            <!-- Docu: https://protobuf.dev/ -->
+            <!-- Documentation: https://protobuf.dev/ -->
             <!-- Getting started: https://protobuf.dev/getting-started/ -->
             <!-- IDEA: https://blog.jetbrains.com/idea/2023/05/how-to-work-with-protobuf-maven-projects-in-intellij-idea/ -->
             <!-- Compilation is started by a maven plugin -->
@@ -66,6 +77,8 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
             <version>${java.protobuf.version}</version>
+           <!-- Compile time only -->
+           <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -73,6 +86,8 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
             <version>${java.protobuf.version}</version>
+            <!-- Compile time only -->
+            <scope>compile</scope>
         </dependency>
 
         <!-- ~~~~~~~ -->
@@ -90,10 +105,12 @@
 
        <dependency>
             <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
-            <!-- This will also pull in logback-core --> 
+            <!-- This will also pull in "logback-core" too so we don't need to list that additionally. -->
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.5.32</version>
+            <!-- Runtime only -->
+            <scope>runtime</scope>
         </dependency>
 
         <!-- ~~~~~~~ -->
@@ -105,6 +122,7 @@
             <!-- Pulls in: org.opentest4j:opentest4j -->
             <!-- Pulls in: org.junit.platform:junit-platform-commons -->
             <!-- Pulls in: org.apiguardian:apiguardian-api -->
+            <!-- Pulls in: org.jspecify:jspecify -->
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>6.0.3</version>
@@ -116,6 +134,7 @@
             <!-- https://mvnrepository.com/artifact/com.google.truth/truth -->
             <!-- "Fluent assertions for Java and Android" -->
             <!-- Docu: https://truth.dev/ -->
+            <!-- Imports are like this: -->
             <!-- import static com.google.common.truth.Truth.assertThat; -->
             <!-- import static com.google.common.truth.Truth.assertWithMessage; -->
             <groupId>com.google.truth</groupId>
@@ -184,7 +203,7 @@
             </plugin>
 
             <plugin>
-                <!-- plugin that lets you add or adjust build inputs (source folders, test folders, resources, -->
+                <!-- Plugin that lets you add or adjust build inputs (source folders, test folders, resources, -->
                 <!-- generated sources, extra artifacts, etc.) during the Maven build without having to -->
                 <!-- fight Maven’s defaults. -->
                 <groupId>org.codehaus.mojo</groupId>
