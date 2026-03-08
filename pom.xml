@@ -65,7 +65,7 @@
             <scope>provided</scope>
         </dependency>
 
-       <dependency>
+        <dependency>
             <!-- Core "Protocol Buffers" library. -->
             <!-- Protocol Buffers are a way of encoding structured data in an efficient yet extensible format.  -->
             <!-- GitHub: https://github.com/protocolbuffers/protobuf -->
@@ -92,7 +92,7 @@
         <!-- LOGGING -->
         <!-- ~~~~~~~ -->
 
-       <dependency>
+        <dependency>
             <!-- The logging API (SLF4J) and the logging implementation (LOGBACK) underneath -->
             <!-- It turns out that we don't actually use them -->
             <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
@@ -101,7 +101,7 @@
             <version>2.0.17</version>
         </dependency>
 
-       <dependency>
+        <dependency>
             <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
             <!-- This will also pull in "logback-core" too so we don't need to list that additionally. -->
             <groupId>ch.qos.logback</groupId>
@@ -145,45 +145,33 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <!-- To define the plugin version in your parent POM -->
-            <plugins>
-               <plugin>
-                    <!-- Repo: https://mvnrepository.com/artifact/io.github.ascopes/protobuf-maven-plugin -->
-                    <!-- Homepage: https://github.com/ascopes/protobuf-maven-plugin -->
-                    <!-- Github: https://github.com/ascopes/protobuf-maven-plugin -->
-                    <!-- Docu: https://ascopes.github.io/protobuf-maven-plugin/ -->
-                    <!-- Docu: https://ascopes.github.io/protobuf-maven-plugin/basic-usage.html -->
-                    <groupId>io.github.ascopes</groupId>
-                    <artifactId>protobuf-maven-plugin</artifactId>
-                    <!-- Version 5.0.0 is the latest as of 2026-02-29, see top of page -->
-                    <!-- https://ascopes.github.io/protobuf-maven-plugin/basic-usage.html -->
-                    <version>5.0.0</version>
-                    <configuration>
-                        <protoc>${java.protobuf.version}</protoc>
-                    </configuration>
-                </plugin>
-               <plugin>
-                    <!-- “make Maven aware of extra stuff” -->
-                    <!-- Repo: https://mvnrepository.com/artifact/org.codehaus.mojo/build-helper-maven-plugin -->
-                    <!-- Docu: https://www.mojohaus.org/build-helper-maven-plugin/ -->
-                    <!-- Usage: https://www.mojohaus.org/build-helper-maven-plugin/usage.html -->
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.6.1</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
 
         <plugins>
-
             <plugin>
+                <!-- ========================== -->
+                <!-- Ascopes Protobuf Processor -->
+                <!-- ========================== -->
+                <!-- Repo: https://mvnrepository.com/artifact/io.github.ascopes/protobuf-maven-plugin -->
+                <!-- Homepage: https://github.com/ascopes/protobuf-maven-plugin -->
+                <!-- Github: https://github.com/ascopes/protobuf-maven-plugin -->
+                <!-- Docu: https://ascopes.github.io/protobuf-maven-plugin/ -->
+                <!-- Docu: https://ascopes.github.io/protobuf-maven-plugin/basic-usage.html -->
                 <groupId>io.github.ascopes</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
+                <!-- Version 5.0.0 is the latest as of 2026-02-29 -->
+                <version>5.0.0</version>
+                <configuration>
+                    <protoc>${java.protobuf.version}</protoc>
+                    <!-- Ensure the generated code lands in a standard location -->
+                    <!-- As recommended by AI - to fix the problem of "IntelliJ IDEA" not finding the sources. -->
+                    <outputDirectory>
+                        ${project.build.directory}/generated-sources/protobuf/java
+                    </outputDirectory>
+                </configuration>
                 <executions>
                     <execution>
-                        <!-- Bind protobuf generation explicitly to the Maven generate-sources phase. -->
-                        <!-- As recommended by AI to fix the problem of the Intellij IDE not finding the sources -->
+                        <!-- Bind protobuf generation explicitly to the "generate-sources" phase. -->
+                        <!-- As recommended by AI - to fix the problem of "IntelliJ IDEA" not finding the sources. -->
                         <id>protobuf-generate</id> <!-- give it a name -->
                         <phase>generate-sources</phase>
                         <goals>
@@ -191,21 +179,21 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <!-- Ensure the generated code lands in a standard location -->
-                    <!-- As recommended by AI to fix the problem of the Intellij IDE not finding the sources -->
-                    <outputDirectory>
-                        ${project.build.directory}/generated-sources/protobuf/java
-                    </outputDirectory>
-                </configuration>
             </plugin>
 
             <plugin>
+                <!-- =============================== -->
+                <!-- Make Maven aware of extra stuff -->
+                <!-- =============================== -->
                 <!-- Plugin that lets you add or adjust build inputs (source folders, test folders, resources, -->
                 <!-- generated sources, extra artifacts, etc.) during the Maven build without having to -->
                 <!-- fight Maven’s defaults. -->
+                <!-- Repo: https://mvnrepository.com/artifact/org.codehaus.mojo/build-helper-maven-plugin -->
+                <!-- Docu: https://www.mojohaus.org/build-helper-maven-plugin/ -->
+                <!-- Usage: https://www.mojohaus.org/build-helper-maven-plugin/usage.html -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.6.1</version>
                 <executions>
                     <execution>
                         <id>add-protobuf-generated-sources</id> <!-- give it a name -->
