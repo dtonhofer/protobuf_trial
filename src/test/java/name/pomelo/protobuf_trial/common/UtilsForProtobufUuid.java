@@ -1,4 +1,4 @@
-package name.pomelo.protobuf_trial.test.common;
+package name.pomelo.protobuf_trial.common;
 
 import com.google.protobuf.ByteString;
 import name.pomelo.protobuf_trial.protos.Uuid;
@@ -12,7 +12,7 @@ import java.util.UUID;
 // ---
 // For Java UUID see:
 //
-// https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/UUID.html
+// https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html
 //
 // Wikipedia on UUID:
 //

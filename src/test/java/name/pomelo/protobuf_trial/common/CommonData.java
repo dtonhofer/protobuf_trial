@@ -1,4 +1,4 @@
-package name.pomelo.protobuf_trial.test.common;
+package name.pomelo.protobuf_trial.common;
 
 import lombok.Getter;
 import name.pomelo.protobuf_trial.protos.CommonStuff;

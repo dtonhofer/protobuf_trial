@@ -24,29 +24,29 @@ not generate compilable Google protobuf source code. One has to execute "Run Mav
 
 The file tree of the project looks as follows:
 
-![File tree of project](docs/protobuf_trial.png)
+![File tree of project](doc/protobuf_trial.png)
 
 Finding a proper "POM" is somewhat black magic, but in the end it worked out. Pointed questions to AI 🦜 helped a lot!
 
 The depencies pulled in via Maven are as follows. This tree can be obtained in IntelliJ IDEA under `View > Tool Windows > Maven`,
-(which does not always work) or by running `mv dependency:tree` in the project directory:
+(which does not always work) or by running `mvn dependency:tree` in the project directory:
 
 ```
 [INFO] --- dependency:3.7.0:tree (default-cli) @ protobuf_trial ---
 [INFO] name.pomelo:protobuf_trial:jar:1.1-SNAPSHOT
-[INFO] +- org.jetbrains:annotations:jar:24.1.0:compile
-[INFO] +- org.projectlombok:lombok:jar:1.18.42:provided
-[INFO] +- com.google.protobuf:protobuf-java:jar:4.33.5:compile
-[INFO] +- com.google.protobuf:protobuf-java-util:jar:4.33.5:compile
+[INFO] +- org.jetbrains:annotations:jar:26.1.0:compile
+[INFO] +- org.projectlombok:lombok:jar:1.18.48:provided
+[INFO] +- com.google.protobuf:protobuf-java:jar:4.36.2:compile
+[INFO] +- com.google.protobuf:protobuf-java-util:jar:4.36.2:compile
 [INFO] |  +- com.google.code.findbugs:jsr305:jar:3.0.2:runtime
 [INFO] |  +- com.google.code.gson:gson:jar:2.8.9:runtime
 [INFO] |  \- com.google.errorprone:error_prone_annotations:jar:2.18.0:runtime
-[INFO] +- org.slf4j:slf4j-api:jar:2.0.17:compile
-[INFO] +- ch.qos.logback:logback-classic:jar:1.5.32:runtime
-[INFO] |  \- ch.qos.logback:logback-core:jar:1.5.32:runtime
-[INFO] +- org.junit.jupiter:junit-jupiter-api:jar:6.0.3:test
+[INFO] +- org.slf4j:slf4j-api:jar:2.0.20:compile
+[INFO] +- ch.qos.logback:logback-classic:jar:1.6.5:runtime
+[INFO] |  \- ch.qos.logback:logback-core:jar:1.6.5:runtime
+[INFO] +- org.junit.jupiter:junit-jupiter-api:jar:6.1.3:test
 [INFO] |  +- org.opentest4j:opentest4j:jar:1.3.0:test
-[INFO] |  +- org.junit.platform:junit-platform-commons:jar:6.0.3:test
+[INFO] |  +- org.junit.platform:junit-platform-commons:jar:6.1.3:test
 [INFO] |  +- org.apiguardian:apiguardian-api:jar:1.1.2:test
 [INFO] |  \- org.jspecify:jspecify:jar:1.0.0:test
 [INFO] \- com.google.truth:truth:jar:1.4.5:test
@@ -61,5 +61,5 @@ The depencies pulled in via Maven are as follows. This tree can be obtained in I
 [INFO]    \- org.ow2.asm:asm:jar:9.8:test
 ```
 
-![Dependency tree](docs/maven_dependency_tree.png)
+![Dependency tree](doc/maven_dependency_tree.png)
 

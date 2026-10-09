@@ -15,11 +15,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!-- We will compile for Java 21 (LTS) -->
+        <!-- We will compile for Java 25 (LTS) -->
         <!-- This is automatically picked up by the maven compiler plugin. -->
         <!-- Prefer "maven.compiler.release" to "maven.compiler.source" and "maven.compiler.target". -->
         <!-- https://en.wikipedia.org/wiki/Java_version_history -->
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.release>25</maven.compiler.release>
 
         <!-- This is the version number of the "google protocol buffers library for Java" in the Maven -->
         <!-- repository, used for dependencies and also by the Maven protobuf compiler plugin. -->
@@ -27,7 +27,7 @@
         <!-- ...https://protobuf.dev/programming-guides/editions/ -->
         <!-- ...Protocol buffers themselves have version numbers, currently around 30.x -->
         <!-- ...https://protobuf.dev/news/ -->
-        <java.protobuf.version>4.33.5</java.protobuf.version>
+        <java.protobuf.version>4.36.2</java.protobuf.version>
     </properties>
 
     <dependencies>
@@ -35,32 +35,32 @@
         <!-- To generate the dependency tree, use                               -->
         <!-- "View | Tool Windows | Maven" in IntelliJ IDEA                     -->
         <!-- or run "mvn dependency:tree" in the project directory.             -->
-        <!-- The topmost libraries appear also listed in the Intellij IDEA UI   -->
+        <!-- The topmost libraries appear also listed in the IntelliJ IDEA UI   -->
         <!-- "Project Structure" > "Project Settings" > "Libraries"             -->
 
         <dependency>
             <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
-            <!-- Imports are like this: -->
+            <!-- Imports are written like this: -->
             <!-- import org.jetbrains.annotations.NotNull; -->
             <!-- import org.jetbrains.annotations.Nullable; -->
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>24.1.0</version>
+            <version>26.1.0</version>
             <!-- Compile time only -->
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <!-- The "Lombok" library which generates the Java get/set boilerplate. -->
-            <!-- Intellij IDEA has a specific plugin for doing the annotation processing for Lombok, -->
-            <!-- it's already included by default -->
+            <!-- The "Lombok" library that generates the Java get/set boilerplate. -->
+            <!-- IntelliJ IDEA has a specific plugin for doing the annotation processing for Lombok, -->
+            <!-- it's already included by default. -->
             <!-- However, one still has to switch on "annotation processing". -->
-            <!-- Intellij IDEA will ask to do so if it's not. -->
+            <!-- IntelliJ IDEA will ask to do so if it's not. -->
             <!-- Otherwise: Settings > Compiler > Annotation Processor -->
             <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.42</version>
+            <version>1.18.48</version>
             <!-- "Provided by the environment at runtime" -->
             <scope>provided</scope>
         </dependency>
@@ -77,7 +77,7 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
             <version>${java.protobuf.version}</version>
-            <!-- Needed at compiletime and runtime -->
+            <!-- Needed at compile-time and runtime -->
         </dependency>
 
         <dependency>
@@ -85,7 +85,7 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
             <version>${java.protobuf.version}</version>
-            <!-- Needed at compiletime and runtime -->
+            <!-- Needed at compile-time and runtime -->
         </dependency>
 
         <!-- ~~~~~~~ -->
@@ -98,15 +98,15 @@
             <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.17</version>
+            <version>2.0.20</version>
         </dependency>
 
         <dependency>
             <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
-            <!-- This will also pull in "logback-core" too so we don't need to list that additionally. -->
+            <!-- This will also pull in "logback-core", too. So we don't need to list that additionally. -->
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.32</version>
+            <version>1.6.5</version>
             <!-- Runtime only -->
             <scope>runtime</scope>
         </dependency>
@@ -123,22 +123,22 @@
             <!-- Pulls in: org.jspecify:jspecify -->
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>6.0.3</version>
-            <!-- Testtime only -->
+            <version>6.1.3</version>
+            <!-- Test-time only -->
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <!-- https://mvnrepository.com/artifact/com.google.truth/truth -->
             <!-- "Fluent assertions for Java and Android" -->
-            <!-- Docu: https://truth.dev/ -->
-            <!-- Imports are like this: -->
+            <!-- Documentation: https://truth.dev/ -->
+            <!-- Imports are written like this: -->
             <!-- import static com.google.common.truth.Truth.assertThat; -->
             <!-- import static com.google.common.truth.Truth.assertWithMessage; -->
             <groupId>com.google.truth</groupId>
             <artifactId>truth</artifactId>
             <version>1.4.5</version>
-            <!-- Testtime only -->
+            <!-- Test-time only -->
             <scope>test</scope>
         </dependency>
 
@@ -154,12 +154,14 @@
                 <!-- Repo: https://mvnrepository.com/artifact/io.github.ascopes/protobuf-maven-plugin -->
                 <!-- Homepage: https://github.com/ascopes/protobuf-maven-plugin -->
                 <!-- Github: https://github.com/ascopes/protobuf-maven-plugin -->
-                <!-- Docu: https://ascopes.github.io/protobuf-maven-plugin/ -->
-                <!-- Docu: https://ascopes.github.io/protobuf-maven-plugin/basic-usage.html -->
+                <!-- Documentation: https://ascopes.github.io/protobuf-maven-plugin/ -->
+                <!-- Documentation: https://ascopes.github.io/protobuf-maven-plugin/basic-usage.html -->
+                <!-- By default, .proto files are read from src/main/protobuf -->
+                <!-- To specify a different location, use the <sourceDirectories> configuration element. -->
                 <groupId>io.github.ascopes</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
-                <!-- Version 5.0.0 is the latest as of 2026-02-29 -->
-                <version>5.0.0</version>
+                <!-- Version 5.1.11 is the latest as of 2026-10-08 -->
+                <version>5.1.11</version>
                 <configuration>
                     <protoc>${java.protobuf.version}</protoc>
                     <!-- Ensure the generated code lands in a standard location -->
@@ -189,11 +191,11 @@
                 <!-- generated sources, extra artifacts, etc.) during the Maven build without having to -->
                 <!-- fight Maven’s defaults. -->
                 <!-- Repo: https://mvnrepository.com/artifact/org.codehaus.mojo/build-helper-maven-plugin -->
-                <!-- Docu: https://www.mojohaus.org/build-helper-maven-plugin/ -->
+                <!-- Documentation: https://www.mojohaus.org/build-helper-maven-plugin/ -->
                 <!-- Usage: https://www.mojohaus.org/build-helper-maven-plugin/usage.html -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>3.6.2</version>
                 <executions>
                     <execution>
                         <id>add-protobuf-generated-sources</id> <!-- give it a name -->

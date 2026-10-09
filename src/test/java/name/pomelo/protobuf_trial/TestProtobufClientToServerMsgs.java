@@ -1,13 +1,13 @@
-package name.pomelo.protobuf_trial.test.testing;
+package name.pomelo.protobuf_trial;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import name.pomelo.protobuf_trial.protos.ClientToServer;
-import name.pomelo.protobuf_trial.test.common.CommonData;
-import name.pomelo.protobuf_trial.test.common.UtilsForProtobufUuid;
+import name.pomelo.protobuf_trial.common.CommonData;
+import name.pomelo.protobuf_trial.common.UtilsForProtobufUuid;
 import org.junit.jupiter.api.Test;
 
 import static com.google.common.truth.Truth.assertThat;
-import static name.pomelo.protobuf_trial.test.common.UtilsForProtobufClientToServerMsgs.*;
+import static name.pomelo.protobuf_trial.common.UtilsForProtobufClientToServerMsgs.*;
 
 class TestProtobufClientToServerMsgs {
 

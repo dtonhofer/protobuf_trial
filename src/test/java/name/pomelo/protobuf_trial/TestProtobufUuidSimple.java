@@ -1,7 +1,7 @@
-package name.pomelo.protobuf_trial.test.testing;
+package name.pomelo.protobuf_trial;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import name.pomelo.protobuf_trial.test.common.UtilsForProtobufUuid;
+import name.pomelo.protobuf_trial.common.UtilsForProtobufUuid;
 import name.pomelo.protobuf_trial.protos.UuidSimple;
 import org.junit.jupiter.api.Test;
 

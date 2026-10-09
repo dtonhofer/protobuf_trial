@@ -1,4 +1,4 @@
-package name.pomelo.protobuf_trial.test.common;
+package name.pomelo.protobuf_trial.common;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageOrBuilder;
