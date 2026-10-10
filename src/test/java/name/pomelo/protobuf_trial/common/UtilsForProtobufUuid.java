@@ -1,12 +1,16 @@
 package name.pomelo.protobuf_trial.common;
 
 import com.google.protobuf.ByteString;
-import name.pomelo.protobuf_trial.protos.Uuid;
-import name.pomelo.protobuf_trial.protos.UuidSimple;
+import lombok.val;
+import name.pomelo.protobuf_trial.protos.Uuid_Bytes;
+import name.pomelo.protobuf_trial.protos.Uuid_Longs;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.UUID;
 
 // ---
@@ -26,69 +30,84 @@ import java.util.UUID;
 
 public abstract class UtilsForProtobufUuid {
 
-    public static boolean isNilUuid(@NotNull UuidSimple uuid) {
+    public enum Endianness {
+        BIG_ENDIAN,
+        LITTLE_ENDIAN;
+
+        public ByteOrder toByteOrder() {
+            if (this == Endianness.BIG_ENDIAN) {
+                return ByteOrder.BIG_ENDIAN;
+            } else {
+                return ByteOrder.LITTLE_ENDIAN;
+            }
+        }
+    }
+
+    // ---
+
+    public static boolean isNilUuid(@NotNull Uuid_Longs uuid) {
         return uuid.getLow() == 0L && uuid.getHigh() == 0L;
+    }
+
+    private static final ByteString NIL_BYTES = ByteString.copyFrom(new byte[16]);
+
+    public static boolean isNilUuid(@NotNull Uuid_Bytes uuid) {
+        return NIL_BYTES.equals(uuid.getData());
     }
 
     public static boolean isNilUuid(@NotNull UUID uuid) {
         return uuid.getLeastSignificantBits() == 0L && uuid.getMostSignificantBits() == 0L;
     }
 
-    private static long readLongBigEndianly(@NotNull ByteArrayInputStream bais) {
-        long shift = 0;
-        for (int i = 0; i < 8; i++) {
-            int n = bais.read();
-            if (n < 0) {
-                System.err.println("No more data from ByteArrayInputStream at index " + i);
-                return shift;
-            } else {
-                shift = shift | (long) (n) << i * 8;
-            }
+    // ---
+
+    public static Long readLong_UsingByteArray(@NotNull ByteArrayInputStream istream, @NotNull Endianness endianness) throws IOException {
+        val barr = new byte[8];
+        val count = istream.read(barr);
+        if (count < 0) {
+            // nothing could be read at all; this happens in case of "default" (nil) UUID
+            System.err.println("Could not read enough data from ByteArrayInputStream: read " + count + " bytes");
         }
-        return shift;
+        else if (count != 8) {
+            throw new IllegalArgumentException("Could not read enough data from ByteArrayInputStream: read " + count + " bytes");
+        }
+        return ByteBuffer.wrap(barr).order(endianness.toByteOrder()).getLong();
     }
 
-    private static void writeLongBigEndianly(final long value, @NotNull ByteArrayOutputStream baos) {
-        long shift = value;
-        for (int i = 0; i < 8; i++) {
-            baos.write((int) (shift & 0xFF));
-            shift >>= 8;
-        }
+
+    private static void writeLong_UsingByteArray(long l, @NotNull ByteArrayOutputStream baos, @NotNull Endianness endianness) throws IOException {
+        val bytes = ByteBuffer.allocate(8).order(endianness.toByteOrder()).putLong(l).array();
+        baos.write(bytes);
     }
 
-    public static @NotNull UuidSimple javaUuidToProtobufUuidSimple(@NotNull UUID javaUuid) {
-        return UuidSimple.newBuilder()
+    public static @NotNull Uuid_Longs javaUuid_to_Protobuf_Uuid_Longs(@NotNull UUID javaUuid) {
+        return Uuid_Longs.newBuilder()
                 .setHigh(javaUuid.getMostSignificantBits())
                 .setLow(javaUuid.getLeastSignificantBits())
                 .build();
     }
 
-    public static @NotNull Uuid javaUuidToProtobufUuid(@NotNull UUID javaUuid) {
-        final var byteArray = uuidToBigEndianArray(javaUuid);
+    public static @NotNull Uuid_Bytes javaUuid_to_Protobuf_Uuid_Bytes(@NotNull UUID javaUuid, @NotNull Endianness endianness) throws IOException {
+        final var byteArray = uuidToArray(javaUuid, endianness);
         final var byteString = ByteString.copyFrom(byteArray);
-        return Uuid.newBuilder().setData(byteString).build();
+        return Uuid_Bytes.newBuilder().setData(byteString).build();
     }
 
-    public static @NotNull UUID protobufUuidToJavaUuid(@NotNull Uuid pbUuid) {
+    public static @NotNull UUID protobuf_Uuid_Bytes_to_JavaUuid(@NotNull Uuid_Bytes pbUuid, @NotNull Endianness endianness) throws IOException {
         ByteArrayInputStream bais = new ByteArrayInputStream(pbUuid.getData().toByteArray());
-        final long low = readLongBigEndianly(bais);
-        final long high = readLongBigEndianly(bais);
+        final long low = readLong_UsingByteArray(bais, endianness);
+        final long high = readLong_UsingByteArray(bais, endianness);
         return new UUID(high, low);
     }
 
-    public static @NotNull UUID protobufUuidSimpleToJavaUuid(@NotNull UuidSimple pbUuid) {
-        final long low = pbUuid.getLow();
-        final long high = pbUuid.getHigh();
-        return new UUID(high, low);
+    public static @NotNull UUID protobuf_Uuid_Longs_to_JavaUuid(@NotNull Uuid_Longs pbUuid) {
+        return new UUID(pbUuid.getHigh(), pbUuid.getLow());
     }
 
-    // UUID: [F][E][D][C][B][A][9][8],[7][6][5][4][3][2][1][0]
-    // bytes: [0][1][2][3][4][5][6][7],[8][9][A][B][C][D][E][F] <-- highest index
-
-    public static byte @NotNull [] uuidToBigEndianArray(@NotNull UUID uuid) {
+    public static byte @NotNull [] uuidToArray(@NotNull UUID uuid, @NotNull Endianness endianness) throws IOException {
         final var baos = new ByteArrayOutputStream(16);
-        writeLongBigEndianly(uuid.getLeastSignificantBits(), baos); // least significant 8 byte first
-        writeLongBigEndianly(uuid.getMostSignificantBits(), baos); // most significant 8 byte first
+        writeLong_UsingByteArray(uuid.getLeastSignificantBits(), baos, endianness); // least significant 8 byte first
+        writeLong_UsingByteArray(uuid.getMostSignificantBits(), baos, endianness); // most significant 8 byte first
         return baos.toByteArray();
     }
 
@@ -97,10 +116,9 @@ public abstract class UtilsForProtobufUuid {
         if (byteArray.length == 0) {
             buf.append("[empty]");
         } else {
-            for (int i = 0; i < byteArray.length; i++) {
-                if (i > 0) {
-                    buf.append(".");
-                }
+            buf.append(String.format("%02x", byteArray[0]));
+            for (int i = 1; i < byteArray.length; i++) {
+                buf.append(".");
                 buf.append(String.format("%02x", byteArray[i]));
             }
         }

@@ -2,7 +2,7 @@ package name.pomelo.protobuf_trial;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import name.pomelo.protobuf_trial.common.UtilsForProtobufUuid;
-import name.pomelo.protobuf_trial.protos.UuidSimple;
+import name.pomelo.protobuf_trial.protos.Uuid_Longs;
 import org.junit.jupiter.api.Test;
 
 import java.nio.ByteBuffer;
@@ -26,13 +26,13 @@ class TestProtobufUuidSimple {
             final var javaUuid = UUID.randomUUID();
             System.out.println("Round " + round + ": " + javaUuid);
             // serialize UUID to byte array that would be seen on the "protobuf wire"
-            final byte[] pbBytes = UtilsForProtobufUuid.javaUuidToProtobufUuidSimple(javaUuid).toByteArray();
+            final byte[] pbBytes = UtilsForProtobufUuid.javaUuid_to_Protobuf_Uuid_Longs(javaUuid).toByteArray();
             System.out.println("   UUID serialized via protobuf: " + UtilsForProtobufUuid.bytesToString(pbBytes));
             // deserialize the byte array back into a protobuf message, then into a Java UUID
             final UUID javaUuidRestored;
             {
-                final UuidSimple pbUuidBack = UuidSimple.parseFrom(ByteBuffer.wrap(pbBytes));
-                javaUuidRestored = UtilsForProtobufUuid.protobufUuidSimpleToJavaUuid(pbUuidBack);
+                final Uuid_Longs pbUuidBack = Uuid_Longs.parseFrom(ByteBuffer.wrap(pbBytes));
+                javaUuidRestored = UtilsForProtobufUuid.protobuf_Uuid_Longs_to_JavaUuid(pbUuidBack);
             }
             System.out.println("   UUID deserialized via protobuf: " + javaUuidRestored);
             assertThat(javaUuid).isEqualTo(javaUuidRestored);
@@ -41,10 +41,10 @@ class TestProtobufUuidSimple {
 
     @Test
     void testProtobufUuidSimpleDefault() {
-        final UuidSimple pbUuid = UuidSimple.newBuilder().getDefaultInstanceForType();
+        final Uuid_Longs pbUuid = Uuid_Longs.newBuilder().getDefaultInstanceForType();
         final byte[] pbBytes = pbUuid.toByteArray();
         System.out.println("Default protobuf UUID serialized via protobuf: " + UtilsForProtobufUuid.bytesToString(pbBytes));
-        final UUID javaUuid = UtilsForProtobufUuid.protobufUuidSimpleToJavaUuid(pbUuid);
+        final UUID javaUuid = UtilsForProtobufUuid.protobuf_Uuid_Longs_to_JavaUuid(pbUuid);
         System.out.println("UUID derived from default protobuf UUID: " + javaUuid);
         // This is the "nil" UUID (it's not really valid)
         assertThat(javaUuid.getLeastSignificantBits()).isEqualTo(0L);

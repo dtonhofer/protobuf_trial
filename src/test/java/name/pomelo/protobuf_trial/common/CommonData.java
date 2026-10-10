@@ -41,11 +41,11 @@ public class CommonData {
         // i.e. we can always use builder "n" instead of having to use builder
         // "n", "n+1", "n+2" etc...
         if (clientExchangeUUID != null) {
-            final var pbUuid = UtilsForProtobufUuid.javaUuidToProtobufUuidSimple(clientExchangeUUID);
+            final var pbUuid = UtilsForProtobufUuid.javaUuid_to_Protobuf_Uuid_Longs(clientExchangeUUID);
             builder.setClientExchangeUuid(pbUuid);
         }
         if (serverExchangeUUID != null) {
-            final var pbUuid = UtilsForProtobufUuid.javaUuidToProtobufUuidSimple(serverExchangeUUID);
+            final var pbUuid = UtilsForProtobufUuid.javaUuid_to_Protobuf_Uuid_Longs(serverExchangeUUID);
             builder.setServerExchangeUuid(pbUuid);
         }
         return builder.build();

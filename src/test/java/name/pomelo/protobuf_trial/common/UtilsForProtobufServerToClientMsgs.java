@@ -79,7 +79,7 @@ public class UtilsForProtobufServerToClientMsgs {
                     // there is nothing to test here really, but let's see whether this compiles
                     final LoginFollowupAnswerOk subMsg = s2c.getLoginFollowupAnswerOk();
                     final String playerName = subMsg.getPlayerName();
-                    final UUID playerUuid = UtilsForProtobufUuid.protobufUuidSimpleToJavaUuid(subMsg.getPlayerUuid());
+                    final UUID playerUuid = UtilsForProtobufUuid.protobuf_Uuid_Longs_to_JavaUuid(subMsg.getPlayerUuid());
                 }
                 break;
             case LOGIN_REQUEST_ANSWER_OK:
@@ -164,7 +164,7 @@ public class UtilsForProtobufServerToClientMsgs {
 
     public static @NotNull ServerToClient buildLoginFollowupAnswerOk(@NotNull UUID playerUuid, @NotNull String playerName, @NotNull CommonData commonData) {
         final ServerToClient.Builder builder = buildServerToClientBuilder(commonData);
-        final var simplePlayerUuid = UtilsForProtobufUuid.javaUuidToProtobufUuidSimple(playerUuid);
+        final var simplePlayerUuid = UtilsForProtobufUuid.javaUuid_to_Protobuf_Uuid_Longs(playerUuid);
         final var subMsg = LoginFollowupAnswerOk.newBuilder().setPlayerName(playerName).setPlayerUuid(simplePlayerUuid).build();
         return builder
                 .setPayloadType(ServerToClient.PayloadType.LOGIN_FOLLOWUP_ANSWER_OK)
